@@ -14,7 +14,7 @@ dist-ssr
 
 # Include everything in admin except headlessportfolio theme
 admin
-!/admin/wp-content/themes/headlessportfolio/
+!admin/wp-content/themes/headlessportfolio/
 
 
 # Editor directories and files

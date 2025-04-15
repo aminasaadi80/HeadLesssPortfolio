@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import { GET_MENUS } from '../graphql/queries';
-import logoImg from '../assets/vite.svg'; // Import the image
 import { Skeleton } from "../Components/ui/skeleton";
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';

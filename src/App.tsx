@@ -10,6 +10,7 @@ import Footer from "./Components/Footer";
 import { ThemeProvider } from './context/ThemeContext';
 import Loading from './Components/Loading';
 import { useEffect, useState } from 'react';
+import NotFound from './Components/NotFound';
 
 // Component to handle scroll to top on route change
 function ScrollToTop() {
@@ -54,6 +55,7 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/projects" element={<Projects />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
             <Footer />

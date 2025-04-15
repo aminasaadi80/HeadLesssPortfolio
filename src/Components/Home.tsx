@@ -2,57 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { useQuery } from '@apollo/client';
+import { GET_POSTS } from '../graphql/queries';
+import { Skeleton } from "../Components/ui/skeleton";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 const profileImg = 'https://placehold.co/200x200';
 
-// Sample projects data
-const projects = [
-  {
-    id: 1,
-    title: 'Project 1',
-    description: 'Description of project 1',
-    image: 'https://placehold.co/600x400',
-    link: '/projects/1'
-  },
-  {
-    id: 2,
-    title: 'Project 2',
-    description: 'Description of project 2',
-    image: 'https://placehold.co/600x400',
-    link: '/projects/2'
-  },
-  {
-    id: 3,
-    title: 'Project 3',
-    description: 'Description of project 3',
-    image: 'https://placehold.co/600x400',
-    link: '/projects/3'
-  },
-  {
-    id: 4,
-    title: 'Project 4',
-    description: 'Description of project 4',
-    image: 'https://placehold.co/600x400',
-    link: '/projects/4'
-  }
-  ,
-  {
-    id: 5,
-    title: 'Project 5',
-    description: 'Description of project 5',
-    image: 'https://placehold.co/600x400',
-    link: '/projects/5'
-  }
-  ,{
-    id: 6,
-    title: 'Project 6',
-    description: 'Description of project 6',
-    image: 'https://placehold.co/600x400',
-    link: '/projects/6'
-  }
-];
 
 // Sample skills data
 const skills = [
@@ -65,6 +22,14 @@ const skills = [
 ];
 
 function Home() {
+  const { loading, error, data } = useQuery(GET_POSTS);
+
+  const stripHtml = (html: string) => {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
+
   const scrollToProjects = (e: React.MouseEvent) => {
     e.preventDefault();
     const projectsSection = document.getElementById('projects');
@@ -149,31 +114,54 @@ function Home() {
               },
             }}
           >
-            {projects.map((project) => (
-              <SwiperSlide key={project.id}>
-                <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      {project.description}
-                    </p>
-                    <Link
-                      to={project.link}
-                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
-                    >
-                      View Project →
-                    </Link>
+            {loading ? (
+              // Loading skeleton
+              Array.from({ length: 3 }).map((_, index) => (
+                <SwiperSlide key={index}>
+                  <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
+                    <Skeleton className="w-full h-48" />
+                    <div className="p-6">
+                      <Skeleton className="h-6 w-3/4 mb-2" />
+                      <Skeleton className="h-4 w-full mb-4" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </div>
                   </div>
-                </div>
-              </SwiperSlide>
-            ))}
+                </SwiperSlide>
+              ))
+            ) : error ? (
+              // Error state
+              <div className="text-center text-red-500 dark:text-red-400">
+                Error loading projects: {error.message}
+              </div>
+            ) : (
+              // Projects data
+              data?.posts?.nodes?.map((project: any) => {
+               return (
+               <SwiperSlide key={project.id}>
+                  <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
+                    <img
+                      src={project.featuredImage?.node?.sourceUrl || 'https://placehold.co/600x400'}
+                      alt={project.title}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                        {project.title}
+                      </h3>
+                      <div className="text-gray-600 h-[50px] max-h-[50px] line-clamp-2 dark:text-gray-400 mb-4">
+                        {stripHtml(project.excerpt)}
+                      </div>
+                      <Link
+                        to={project.slug}
+                        className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
+                      >
+                        View Project →
+                      </Link>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              )})
+            )}
           </Swiper>
         </div>
       </section>

@@ -129,9 +129,30 @@ function Home() {
       {/* Projects Section */}
       <section id="projects" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
-            Featured Projects
-          </h2>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Featured Projects
+            </h2>
+            <Link
+              to="/projects"
+              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium flex items-center"
+            >
+              View All Projects
+              <svg
+                className="w-4 h-4 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </Link>
+          </div>
           <Swiper className='swiper-projects'
             modules={[Navigation, Pagination, A11y]}
             spaceBetween={30}

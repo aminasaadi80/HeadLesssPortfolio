@@ -50,10 +50,58 @@ const projects = [
     image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+6',
     tags: ['Next.js', 'GraphQL', 'Prisma'],
     link: '/projects/6'
+  },
+  {
+    id: 7,
+    title: 'Project 7',
+    description: 'A brief description of project 7',
+    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+7',
+    tags: ['Svelte', 'SvelteKit', 'Drizzle'],
+    link: '/projects/7'
+  },
+  {
+    id: 8,
+    title: 'Project 8',
+    description: 'A brief description of project 8',
+    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+8',
+    tags: ['Flutter', 'Dart', 'Firebase'],
+    link: '/projects/8'
+  },
+  {
+    id: 9,
+    title: 'Project 9',
+    description: 'A brief description of project 9',
+    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+9',
+    tags: ['Rust', 'Actix', 'PostgreSQL'],
+    link: '/projects/9'
+  },
+  {
+    id: 10,
+    title: 'Project 10',
+    description: 'A brief description of project 10',
+    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+10',
+    tags: ['Go', 'Gin', 'MongoDB'],
+    link: '/projects/10'
+  },
+  {
+    id: 11,
+    title: 'Project 11',
+    description: 'A brief description of project 11',
+    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+11',
+    tags: ['Java', 'Spring Boot', 'MySQL'],
+    link: '/projects/11'
+  },
+  {
+    id: 12,
+    title: 'Project 12',
+    description: 'A brief description of project 12',
+    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+12',
+    tags: ['C#', '.NET', 'SQL Server'],
+    link: '/projects/12'
   }
 ];
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 6;
 
 function Projects() {
   const [currentPage, setCurrentPage] = useState(1);

@@ -74,6 +74,12 @@ function Header() {
               About
             </Link>
             <Link
+              to="/projects"
+              className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+            >
+              Projects
+            </Link>
+            <Link
               to="/contact"
               className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
             >
@@ -152,6 +158,13 @@ function Header() {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               About
+            </Link>
+            <Link
+              to="/projects"
+              className="block text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Projects
             </Link>
             <Link
               to="/contact"

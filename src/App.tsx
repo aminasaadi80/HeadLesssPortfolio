@@ -5,6 +5,7 @@ import Header from "./Components/Header";
 import Home from "./Components/Home";
 import About from "./Components/About";
 import Contact from "./Components/Contact";
+import Projects from "./Components/Projects";
 import Footer from "./Components/Footer";
 import { ThemeProvider } from './context/ThemeContext';
 import Loading from './Components/Loading';
@@ -52,8 +53,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
-                {/* Add more routes here as you create new components */}
-                {/* <Route path="/projects" element={<Projects />} /> */}
+                <Route path="/projects" element={<Projects />} />
               </Routes>
             </main>
             <Footer />

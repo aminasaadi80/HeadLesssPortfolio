@@ -1,76 +1,142 @@
 import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { Link } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import 'swiper/css';
-import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+const profileImg = 'https://placehold.co/200x200';
 
-// Sample project data - replace with your actual projects
+// Sample projects data
 const projects = [
   {
     id: 1,
-    title: 'Project One',
-    description: 'A brief description of the first project',
+    title: 'Project 1',
+    description: 'Description of project 1',
     image: 'https://placehold.co/600x400',
-    link: '#'
+    link: '/projects/1'
   },
   {
     id: 2,
-    title: 'Project Two',
-    description: 'A brief description of the second project',
+    title: 'Project 2',
+    description: 'Description of project 2',
     image: 'https://placehold.co/600x400',
-    link: '#'
+    link: '/projects/2'
   },
   {
     id: 3,
-    title: 'Project Three',
-    description: 'A brief description of the third project',
+    title: 'Project 3',
+    description: 'Description of project 3',
     image: 'https://placehold.co/600x400',
-    link: '#'
+    link: '/projects/3'
+  },
+  {
+    id: 4,
+    title: 'Project 4',
+    description: 'Description of project 4',
+    image: 'https://placehold.co/600x400',
+    link: '/projects/4'
+  }
+  ,
+  {
+    id: 5,
+    title: 'Project 5',
+    description: 'Description of project 5',
+    image: 'https://placehold.co/600x400',
+    link: '/projects/5'
+  }
+  ,{
+    id: 6,
+    title: 'Project 6',
+    description: 'Description of project 6',
+    image: 'https://placehold.co/600x400',
+    link: '/projects/6'
   }
 ];
 
-const Home: React.FC = () => {
+// Sample skills data
+const skills = [
+  { name: 'React', level: 90, icon: '⚛️' },
+  { name: 'TypeScript', level: 85, icon: '📘' },
+  { name: 'Node.js', level: 80, icon: '🟢' },
+  { name: 'GraphQL', level: 75, icon: '📊' },
+  { name: 'Tailwind CSS', level: 90, icon: '🎨' },
+  { name: 'Docker', level: 70, icon: '🐳' }
+];
+
+function Home() {
+  const scrollToProjects = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <>
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="absolute inset-0 bg-black opacity-20"></div>
-        <div className="container mx-auto px-4 z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
-              Hi, I'm <span className="text-yellow-300">Amin Asaadi</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-100">
-              A passionate developer crafting digital experiences that make an impact.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="#projects"
-                className="px-8 py-3 bg-white text-blue-600 rounded-full font-semibold hover:bg-gray-100 transition duration-300 scroll-smooth"
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-700 dark:to-purple-800">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
+            Welcome to My Portfolio
+          </h1>
+          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            I'm a passionate developer creating amazing web experiences
+          </p>
+          <button
+            onClick={scrollToProjects}
+            className="inline-block bg-white text-indigo-600 dark:bg-gray-800 dark:text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+          >
+            View My Work
+          </button>
+        </div>
+      </section>
+
+      {/* Skills Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
+            My Skills
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {skills.map((skill) => (
+              <div
+                key={skill.name}
+                className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
               >
-                View My Work
-              </a>
-              <a
-                href="#contact"
-                className="px-8 py-3 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-blue-600 transition duration-300"
-              >
-                Get In Touch
-              </a>
-            </div>
+                <div className="flex items-center mb-4">
+                  <span className="text-2xl mr-3">{skill.icon}</span>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    {skill.name}
+                  </h3>
+                </div>
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div
+                    className="bg-indigo-600 dark:bg-indigo-500 h-2.5 rounded-full transition-all duration-500"
+                    style={{ width: `${skill.level}%` }}
+                  ></div>
+                </div>
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                  {skill.level}% proficiency
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Projects Slider Section */}
-      <section id="projects" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Featured Projects</h2>
-          <Swiper
-            modules={[Autoplay, Pagination, Navigation]}
+      {/* Projects Section */}
+      <section id="projects" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
+            Featured Projects
+          </h2>
+          <Swiper className='swiper-projects'
+            modules={[Navigation, Pagination, A11y]}
             spaceBetween={30}
             slidesPerView={1}
+            pagination={{ clickable: true }}
             breakpoints={{
               640: {
                 slidesPerView: 1,
@@ -82,33 +148,28 @@ const Home: React.FC = () => {
                 slidesPerView: 3,
               },
             }}
-            autoplay={{
-              delay: 3000,
-              disableOnInteraction: false,
-            }}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            className="mySwiper"
           >
             {projects.map((project) => (
               <SwiperSlide key={project.id}>
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
+                <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
                   <img
                     src={project.image}
                     alt={project.title}
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                    <p className="text-gray-600 mb-4">{project.description}</p>
-                    <a
-                      href={project.link}
-                      className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      {project.description}
+                    </p>
+                    <Link
+                      to={project.link}
+                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
                     >
-                      View Project
-                    </a>
+                      View Project →
+                    </Link>
                   </div>
                 </div>
               </SwiperSlide>
@@ -118,32 +179,36 @@ const Home: React.FC = () => {
       </section>
 
       {/* About Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="mb-8">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            <div className="w-full md:w-1/3">
               <img
-                src="https://placehold.co/200x200"
-                alt="Profile Photo"
-                className="w-40 h-40 rounded-full mx-auto object-cover border-4 border-blue-100 shadow-lg"
+                src={profileImg}
+                alt="Profile"
+                className="w-64 h-64 rounded-full object-cover mx-auto shadow-lg"
               />
             </div>
-            <h2 className="text-4xl font-bold mb-6">About Me</h2>
-            <p className="text-lg text-gray-600 mb-8">
-              I'm a passionate developer with expertise in creating modern web applications.
-              My focus is on delivering high-quality, user-friendly solutions that make a difference.
-            </p>
-            <Link
-              to="/about"
-              className="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition duration-300"
-            >
-              Learn More About Me
-            </Link>
+            <div className="w-full md:w-2/3">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                About Me
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                I'm a passionate developer with expertise in modern web technologies.
+                I love creating beautiful, functional, and user-friendly applications.
+              </p>
+              <Link
+                to="/about"
+                className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200"
+              >
+                Learn More About Me
+              </Link>
+            </div>
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
-};
+}
 
 export default Home;

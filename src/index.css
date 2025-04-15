@@ -122,3 +122,7 @@
 html {
   scroll-behavior: smooth;
 }
+
+.swiper-projects .swiper-wrapper {
+  @apply mb-10
+}

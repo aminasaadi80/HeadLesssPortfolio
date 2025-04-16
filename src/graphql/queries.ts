@@ -26,14 +26,29 @@ export const GET_POSTS = gql`
       nodes {
         id
         title
-        slug
-        content
-        date
         excerpt
+        slug
         featuredImage {
           node {
             sourceUrl
           }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_POST_BY_SLUG = gql`
+  query GetPostBySlug($slug: ID!) {
+    post(id: $slug, idType: SLUG) {
+      id
+      title
+      content
+      excerpt
+      slug
+      featuredImage {
+        node {
+          sourceUrl
         }
       }
     }

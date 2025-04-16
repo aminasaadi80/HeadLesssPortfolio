@@ -6,6 +6,7 @@ import Home from "./Components/Home";
 import About from "./Components/About";
 import Contact from "./Components/Contact";
 import Projects from "./Components/Projects";
+import SingleProject from "./Components/SingleProject";
 import Footer from "./Components/Footer";
 import { ThemeProvider } from './context/ThemeContext';
 import Loading from './Components/Loading';
@@ -55,6 +56,7 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/projects" element={<Projects />} />
+                <Route path="/projects/:slug" element={<SingleProject />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

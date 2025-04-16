@@ -8,6 +8,7 @@ import { Skeleton } from "../Components/ui/skeleton";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { stripHtml } from './StripHtml';
 const profileImg = 'https://placehold.co/200x200';
 
 
@@ -23,12 +24,6 @@ const skills = [
 
 function Home() {
   const { loading, error, data } = useQuery(GET_POSTS);
-
-  const stripHtml = (html: string) => {
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
-  };
 
   const scrollToProjects = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -152,7 +147,7 @@ function Home() {
                         {stripHtml(project.excerpt)}
                       </div>
                       <Link
-                        to={project.slug}
+                        to={`/projects/${project.slug}`}
                         className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
                       >
                         View Project →

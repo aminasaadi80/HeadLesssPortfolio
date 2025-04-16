@@ -1,110 +1,30 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { GET_POSTS } from '../graphql/queries';
+import { Skeleton } from "../Components/ui/skeleton";
+import { stripHtml } from './StripHtml';
 
-// Sample project data - replace with your actual data
-const projects = [
-  {
-    id: 1,
-    title: 'Project 1',
-    description: 'A brief description of project 1',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+1',
-    tags: ['React', 'TypeScript', 'Tailwind'],
-    link: '/projects/1'
-  },
-  {
-    id: 2,
-    title: 'Project 2',
-    description: 'A brief description of project 2',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+2',
-    tags: ['Node.js', 'Express', 'MongoDB'],
-    link: '/projects/2'
-  },
-  {
-    id: 3,
-    title: 'Project 3',
-    description: 'A brief description of project 3',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+3',
-    tags: ['Python', 'Django', 'PostgreSQL'],
-    link: '/projects/3'
-  },
-  {
-    id: 4,
-    title: 'Project 4',
-    description: 'A brief description of project 4',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+4',
-    tags: ['Vue', 'Nuxt', 'Firebase'],
-    link: '/projects/4'
-  },
-  {
-    id: 5,
-    title: 'Project 5',
-    description: 'A brief description of project 5',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+5',
-    tags: ['React Native', 'Expo', 'Redux'],
-    link: '/projects/5'
-  },
-  {
-    id: 6,
-    title: 'Project 6',
-    description: 'A brief description of project 6',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+6',
-    tags: ['Next.js', 'GraphQL', 'Prisma'],
-    link: '/projects/6'
-  },
-  {
-    id: 7,
-    title: 'Project 7',
-    description: 'A brief description of project 7',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+7',
-    tags: ['Svelte', 'SvelteKit', 'Drizzle'],
-    link: '/projects/7'
-  },
-  {
-    id: 8,
-    title: 'Project 8',
-    description: 'A brief description of project 8',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+8',
-    tags: ['Flutter', 'Dart', 'Firebase'],
-    link: '/projects/8'
-  },
-  {
-    id: 9,
-    title: 'Project 9',
-    description: 'A brief description of project 9',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+9',
-    tags: ['Rust', 'Actix', 'PostgreSQL'],
-    link: '/projects/9'
-  },
-  {
-    id: 10,
-    title: 'Project 10',
-    description: 'A brief description of project 10',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+10',
-    tags: ['Go', 'Gin', 'MongoDB'],
-    link: '/projects/10'
-  },
-  {
-    id: 11,
-    title: 'Project 11',
-    description: 'A brief description of project 11',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+11',
-    tags: ['Java', 'Spring Boot', 'MySQL'],
-    link: '/projects/11'
-  },
-  {
-    id: 12,
-    title: 'Project 12',
-    description: 'A brief description of project 12',
-    image: 'https://placehold.co/600x400/2563eb/ffffff?text=Project+12',
-    tags: ['C#', '.NET', 'SQL Server'],
-    link: '/projects/12'
-  }
-];
+
+interface Project {
+  id: string;
+  title: string;
+  excerpt: string;
+  slug: string;
+  featuredImage?: {
+    node?: {
+      sourceUrl: string;
+    };
+  };
+}
 
 const ITEMS_PER_PAGE = 6;
 
 function Projects() {
   const [currentPage, setCurrentPage] = useState(1);
+  const { loading, error, data } = useQuery(GET_POSTS);
+  
+  const projects = data?.posts?.nodes || [];
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
 
   const currentProjects = projects.slice(
@@ -116,6 +36,42 @@ function Projects() {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  if (loading) return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <Skeleton className="h-12 w-48 mx-auto mb-4" />
+          <Skeleton className="h-6 w-64 mx-auto" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+              <Skeleton className="h-48 w-full" />
+              <div className="p-6">
+                <Skeleton className="h-6 w-3/4 mb-4" />
+                <Skeleton className="h-4 w-full mb-4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto text-center">
+        <h2 className="text-2xl font-bold text-red-600 dark:text-red-400">
+          Error loading projects
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
+          {error.message}
+        </p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
@@ -132,14 +88,14 @@ function Projects() {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {currentProjects.map((project) => (
+          {currentProjects.map((project: Project) => (
             <div
               key={project.id}
               className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative h-48">
                 <img
-                  src={project.image}
+                  src={project.featuredImage?.node?.sourceUrl || 'https://placehold.co/600x400'}
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
@@ -150,20 +106,10 @@ function Projects() {
               </div>
               <div className="p-6">
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {project.description}
+                {stripHtml(project.excerpt)}
                 </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 rounded-full text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
                 <Link
-                  to={project.link}
+                  to={`/projects/${project.slug}`}
                   className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
                 >
                   View Project

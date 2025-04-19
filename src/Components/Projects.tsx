@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_POSTS } from '../graphql/queries';
+import { GET_PROJECTS_FIELDS, GET_POSTS } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";
 import { stripHtml } from './StripHtml';
 
+interface ProjectsData {
+  page: {
+    projects: {
+      title: string;
+      subtitle: string;
+    };
+  };
+}
 
 interface Project {
   id: string;
@@ -14,6 +22,7 @@ interface Project {
   featuredImage?: {
     node?: {
       sourceUrl: string;
+      altText: string;
     };
   };
 }
@@ -22,9 +31,13 @@ const ITEMS_PER_PAGE = 6;
 
 function Projects() {
   const [currentPage, setCurrentPage] = useState(1);
-  const { loading, error, data } = useQuery(GET_POSTS);
-  
-  const projects = data?.posts?.nodes || [];
+  const { loading: loadingProjects, error: projectsError, data: projectsData } = useQuery<ProjectsData>(GET_PROJECTS_FIELDS);
+  const { loading: loadingPosts, error: postsError, data: postsData } = useQuery(GET_POSTS);
+
+  const loading = loadingProjects || loadingPosts;
+  const error = projectsError || postsError;
+
+  const projects = postsData?.posts?.nodes || [];
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
 
   const currentProjects = projects.slice(
@@ -41,8 +54,8 @@ function Projects() {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <Skeleton className="h-12 w-48 mx-auto mb-4" />
-          <Skeleton className="h-6 w-64 mx-auto" />
+          <Skeleton className="h-12 w-64 mx-auto mb-4" />
+          <Skeleton className="h-6 w-96 mx-auto" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {Array.from({ length: 6 }).map((_, index) => (
@@ -73,16 +86,23 @@ function Projects() {
     </div>
   );
 
+  const pageData = projectsData?.page?.projects;
+  if (!pageData) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-red-500">Projects data structure is incorrect</p>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            My Projects
+            {pageData.title}
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300">
-            A collection of my recent work and projects
+            {pageData.subtitle}
           </p>
         </div>
 
@@ -96,7 +116,7 @@ function Projects() {
               <div className="relative h-48">
                 <img
                   src={project.featuredImage?.node?.sourceUrl || 'https://placehold.co/600x400'}
-                  alt={project.title}
+                  alt={project.featuredImage?.node?.altText || project.title}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -106,7 +126,7 @@ function Projects() {
               </div>
               <div className="p-6">
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                {stripHtml(project.excerpt)}
+                  {stripHtml(project.excerpt)}
                 </p>
                 <Link
                   to={`/projects/${project.slug}`}

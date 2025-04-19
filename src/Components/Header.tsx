@@ -1,20 +1,44 @@
 import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
-import { GET_MENUS } from '../graphql/queries';
+import { GET_HEADER, GET_MENUS } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
+interface MenuItem {
+  id: string;
+  label: string;
+  url: string;
+  parentId: string | null;
+}
+
+interface HeaderData {
+  headerFooter: {
+    header: {
+      logo: {
+        node: {
+          sourceUrl: string;
+          altText: string;
+        };
+      };
+      siteName: string;
+    };
+  };
+}
+
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isDarkMode, toggleDarkMode } = useTheme();
-  const { loading, error, data } = useQuery(GET_MENUS);
+  
+  const { loading: menuLoading, error: menuError, data: menuData } = useQuery(GET_MENUS);
+  const { loading: headerLoading, error: headerError, data: headerData } = useQuery<HeaderData>(GET_HEADER);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  if (loading) return (
+  // Loading state
+  if (menuLoading || headerLoading) return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -33,18 +57,35 @@ function Header() {
     </header>
   );
 
-  if (error) return (
+  // Error state
+  if (menuError || headerError) return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <p>Error loading menu data</p>
+          <div className="flex items-center space-x-2">
+            <img src="/vite.svg" alt="Logo" className="h-8 w-8" />
+            <span className="text-xl font-bold text-gray-900 dark:text-white">Portfolio</span>
+          </div>
+          <p className="text-red-500">Error loading menu data</p>
         </div>
       </div>
     </header>
   );
 
-  // Get the first menu's items (you can modify this to get a specific menu by name if needed)
-  const menuItems = data?.menus?.nodes?.[0]?.menuItems?.nodes || [];
+  // Extract data with fallbacks
+  const menuItems = menuData?.menus?.nodes?.[0]?.menuItems?.nodes || [];
+  const headerLogo = headerData?.headerFooter?.header?.logo?.node;
+  const siteName = headerData?.headerFooter?.header?.siteName || 'Portfolio';
+
+  // Process menu items to handle internal/external links
+  const processedMenuItems = menuItems.map((item: MenuItem) => {
+    // Convert WordPress URL to React Router path if it's an internal link
+    const url = item.url.startsWith('http') ? item.url : item.url.replace(/^https?:\/\/[^/]+/, '');
+    return {
+      ...item,
+      url
+    };
+  });
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
@@ -53,37 +94,32 @@ function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <img src="/vite.svg" alt="Logo" className="h-8 w-8" />
-              <span className="text-xl font-bold text-gray-900 dark:text-white">Portfolio</span>
+              {headerLogo ? (
+                <img 
+                  src={headerLogo.sourceUrl} 
+                  alt={headerLogo.altText || 'Logo'} 
+                  className="h-8 w-8" 
+                />
+              ) : (
+                <img src="/vite.svg" alt="Logo" className="h-8 w-8" />
+              )}
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
+                {siteName}
+              </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link
-              to="/"
-              className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              to="/about"
-              className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              to="/projects"
-              className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-            >
-              Projects
-            </Link>
-            <Link
-              to="/contact"
-              className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-            >
-              Contact
-            </Link>
+            {processedMenuItems.map((item: MenuItem) => (
+              <Link
+                key={item.id}
+                to={item.url}
+                className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
             <button
               onClick={toggleDarkMode}
               className="p-2 rounded-full text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
@@ -144,34 +180,16 @@ function Header() {
           }`}
         >
           <nav className="py-4 space-y-4">
-            <Link
-              to="/"
-              className="block text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link
-              to="/about"
-              className="block text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              About
-            </Link>
-            <Link
-              to="/projects"
-              className="block text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Projects
-            </Link>
-            <Link
-              to="/contact"
-              className="block text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Contact
-            </Link>
+            {processedMenuItems.map((item: MenuItem) => (
+              <Link
+                key={item.id}
+                to={item.url}
+                className="block text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
         </div>
       </div>

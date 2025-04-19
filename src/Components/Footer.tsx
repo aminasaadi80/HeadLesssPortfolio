@@ -151,6 +151,27 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               {footer?.social?.title || 'Connect With Me'}
             </h3>
+            {/* <div className="flex space-x-4">
+              {socialItems.map((item, index) => (
+                <a
+                  key={index}
+                  href={item.link.url}
+                  target={item.link.target}
+                  rel="noopener noreferrer"
+                  className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                >
+                  {item.logo?.node ? (
+                    <img
+                      src={item.logo.node.sourceUrl}
+                      alt={item.logo.node.altText || item.link.title}
+                      className="w-6 h-6"
+                    />
+                  ) : (
+                    <span>{item.link.title}</span>
+                  )}
+                </a>
+              ))}
+            </div> */}
             <div className="flex space-x-4">
                 <a
                     href="https://github.com/aminasaadi80"

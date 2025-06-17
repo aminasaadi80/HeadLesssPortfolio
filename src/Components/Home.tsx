@@ -230,7 +230,7 @@ function Home() {
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             {homeFields.projects.title}
           </h2>
-          <Swiper
+          <Swiper className='swiper-projects'
             modules={[Navigation, Pagination, A11y]}
             spaceBetween={30}
             slidesPerView={1}

@@ -207,7 +207,6 @@ export const GET_ABOUT_FIELDS = gql`
   }
 `;
 
-
 export const GET_CONTACT_FIELDS = gql`
   query GetContactFields {
     page(id: "contact", idType: URI) {

@@ -18,12 +18,16 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
+          port: ${{ secrets.SSH_PORT || 9011 }}
+          timeout: 30s
+          command_timeout: 10m
           script: |
             cd /srv/app/react/portfolio
+            
             # Pull latest changes
             git pull origin main
-            # Rebuild Dockerfile (که patch رو داره)
+            
+            # Create optimized Dockerfile
             cat > Dockerfile <<'EOF'
             FROM node:20-alpine AS builder
             WORKDIR /app
@@ -36,6 +40,7 @@ jobs:
             COPY . .
             RUN node -e "const fs=require('fs');['tsconfig.json','tsconfig.app.json','tsconfig.node.json'].forEach(f=>{if(fs.existsSync(f)){let raw=fs.readFileSync(f,'utf8');let clean=raw.replace(/\\/\\*[\\s\\S]*?\\*\\//g,'').replace(/\\/\\/.*$/gm,'');let j=JSON.parse(clean);j.compilerOptions=j.compilerOptions||{};j.compilerOptions.noUnusedLocals=false;j.compilerOptions.noUnusedParameters=false;j.compilerOptions.skipLibCheck=true;fs.writeFileSync(f,JSON.stringify(j,null,2));console.log('✔️ patched',f)}})"
             RUN npm run build
+            
             FROM nginx:1.27-alpine
             WORKDIR /usr/share/nginx/html
             RUN rm -f /etc/nginx/conf.d/default.conf
@@ -44,13 +49,19 @@ jobs:
             EXPOSE 80
             HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://127.0.0.1/ >/dev/null || exit 1
             EOF
-            # Stop and rebuild
+            
+            # Stop existing containers
             docker compose down || true
+            
+            # Build and start
             docker compose build --no-cache --progress=plain
             docker compose up -d
+            
             # Clean up
             docker system prune -f
-            # Test
+            
+            # Test deployment
             sleep 5
-            curl -I http://127.0.0.1:3001
-            echo "Deployment complete!"
+            curl -I http://127.0.0.1:3001 || echo "Service check failed"
+            
+            echo "✅ Deployment complete!"

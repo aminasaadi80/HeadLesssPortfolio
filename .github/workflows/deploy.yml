@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Deploy React Portfolio
 
 on:
   push:
@@ -21,11 +21,10 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Build project
+    - name: Build with Vite
       run: npm run build
       env:
         CI: false
-        REACT_APP_API_URL: https://cms.aminasaadi.ir
     
     - name: Deploy to server
       uses: appleboy/ssh-action@v0.1.5
@@ -34,20 +33,26 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          # Clone or update repository
-          if [ ! -d "/root/HeadLessPortfolio" ]; then
-            cd /root
-            git clone https://github.com/aminasaadi80/HeadLessPortfolio.git
-          else
-            cd /root/HeadLessPortfolio
-            git pull origin main
-          fi
+          # Navigate to existing project directory
+          cd /srv/app/react/portfolio
           
-          # Rebuild and restart container
-          cd /root/HeadLessPortfolio
-          docker-compose down reactapp
-          docker-compose build --no-cache reactapp
-          docker-compose up -d reactapp
+          # Pull latest changes
+          git pull origin main
           
-          # Clean up
+          # Install dependencies and build
+          npm ci
+          npm run build
+          
+          # Stop existing container
+          docker-compose down
+          
+          # Rebuild Docker image with new build
+          docker build -t portfolio-reactapp .
+          
+          # Start container
+          docker-compose up -d
+          
+          # Clean up old images
           docker system prune -f
+          
+          echo "Deployment complete!"

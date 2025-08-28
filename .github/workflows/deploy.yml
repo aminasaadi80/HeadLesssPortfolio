@@ -1,0 +1,53 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build project
+      run: npm run build
+      env:
+        CI: false
+        REACT_APP_API_URL: https://cms.aminasaadi.ir
+    
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          # Clone or update repository
+          if [ ! -d "/root/HeadLessPortfolio" ]; then
+            cd /root
+            git clone https://github.com/aminasaadi80/HeadLessPortfolio.git
+          else
+            cd /root/HeadLessPortfolio
+            git pull origin main
+          fi
+          
+          # Rebuild and restart container
+          cd /root/HeadLessPortfolio
+          docker-compose down reactapp
+          docker-compose build --no-cache reactapp
+          docker-compose up -d reactapp
+          
+          # Clean up
+          docker system prune -f

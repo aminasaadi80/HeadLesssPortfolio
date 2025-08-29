@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client';
 import { GET_POST_BY_SLUG } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";
 import { stripHtml } from './StripHtml';
+import TechBadge from './ui/TechBadge';
 
 
 function SingleProject() {
@@ -91,6 +92,13 @@ function SingleProject() {
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
               {project.title}
             </h1>
+            {project.categories?.nodes && project.categories.nodes.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {project.categories.nodes.map((category) => (
+                  <TechBadge key={category.slug} name={category.name} />
+                ))}
+              </div>
+            )}
             {project.excerpt && (
               <div className="prose dark:prose-invert max-w-none mb-8">
               {stripHtml(project.excerpt)}

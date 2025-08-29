@@ -15,6 +15,12 @@ export const GET_POSTS = gql`
             sourceUrl
           }
         }
+        categories {
+          nodes {
+            name
+            slug
+          }
+        }
       }
     }
   }
@@ -268,6 +274,12 @@ export const GET_POST_BY_SLUG = gql`
       featuredImage {
         node {
           sourceUrl
+        }
+      }
+      categories {
+        nodes {
+          name
+          slug
         }
       }
     }

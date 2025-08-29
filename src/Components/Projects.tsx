@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client';
 import { GET_PROJECTS_FIELDS, GET_POSTS } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";
 import { stripHtml } from './StripHtml';
+import TechBadge from './ui/TechBadge';
 
 interface ProjectsData {
   page: {
@@ -24,6 +25,12 @@ interface Project {
       sourceUrl: string;
       altText: string;
     };
+  };
+  categories?: {
+    nodes?: Array<{
+      name: string;
+      slug: string;
+    }>;
   };
 }
 
@@ -128,6 +135,13 @@ function Projects() {
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
                   {stripHtml(project.excerpt)}
                 </p>
+                {project.categories?.nodes && project.categories.nodes.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.categories.nodes.map((category) => (
+                      <TechBadge key={category.slug} name={category.name} />
+                    ))}
+                  </div>
+                )}
                 <Link
                   to={`/projects/${project.slug}`}
                   className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"

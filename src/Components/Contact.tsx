@@ -3,21 +3,28 @@ import { useQuery } from '@apollo/client';
 import { GET_CONTACT_FIELDS } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";
 import { stripHtml } from './StripHtml';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ContactData {
   page: {
     contact: {
       title: string;
+      enTitle?: string;
       subtitle: string;
+      enSubtitle?: string;
       info: {
         title: string;
+        enTitle?: string;
         subtitle: string;
+        enSubtitle?: string;
         email: string;
         phone: string;
         address: string;
+        enAddress?: string;
       };
       social: {
         title: string;
+        enTitle?: string;
         items: Array<{
           logo: {
             node: {
@@ -30,12 +37,20 @@ interface ContactData {
             url: string;
             target: string;
           };
+          enLink?: {
+            title: string;
+            url: string;
+            target: string;
+          };
         }>;
       };
       location: {
         title: string;
+        enTitle?: string;
         desc: string;
+        enDesc?: string;
         map: string;
+        enMap?: string;
       };
     };
   };
@@ -43,6 +58,7 @@ interface ContactData {
 
 function Contact() {
   const { loading, error, data } = useQuery<ContactData>(GET_CONTACT_FIELDS);
+  const { currentLanguage } = useLanguage();
 
   if (loading) return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -101,10 +117,10 @@ function Contact() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-700 dark:to-purple-800">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
-            {contactData.title}
+            {currentLanguage === 'en' ? (contactData.enTitle || contactData.title) : contactData.title}
           </h1>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            {contactData.subtitle}
+            {currentLanguage === 'en' ? (contactData.enSubtitle || contactData.subtitle) : contactData.subtitle}
           </p>
         </div>
       </section>
@@ -117,10 +133,10 @@ function Contact() {
             <div className="space-y-8">
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  {contactData.info.title}
+                  {currentLanguage === 'en' ? (contactData.info.enTitle || contactData.info.title) : contactData.info.title}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {contactData.info.subtitle}
+                  {currentLanguage === 'en' ? (contactData.info.enSubtitle || contactData.info.subtitle) : contactData.info.subtitle}
                 </p>
               </div>
 
@@ -162,7 +178,7 @@ function Contact() {
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Location</h4>
-                    <p className="text-gray-600 dark:text-gray-400">{contactData.info.address}</p>
+                    <p className="text-gray-600 dark:text-gray-400">{currentLanguage === 'en' ? (contactData.info.enAddress || contactData.info.address) : contactData.info.address}</p>
                   </div>
                 </div>
               </div>
@@ -170,7 +186,7 @@ function Contact() {
               {/* Social Links */}
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  {contactData.social.title}
+                  {currentLanguage === 'en' ? (contactData.social.enTitle || contactData.social.title) : contactData.social.title}
                 </h4>
                 {/* <div className="flex space-x-4">
               {contactData.social.items.map((item, index) => (
@@ -252,14 +268,14 @@ function Contact() {
             {/* Map or Additional Content */}
             <div className="bg-gray-50 dark:bg-gray-800 p-8 rounded-lg shadow-sm">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                {contactData.location.title}
+                {currentLanguage === 'en' ? (contactData.location.enTitle || contactData.location.title) : contactData.location.title}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                {stripHtml(contactData.location.desc)}
+                {stripHtml(currentLanguage === 'en' ? (contactData.location.enDesc || contactData.location.desc) : contactData.location.desc)}
               </p>
               <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
                 <iframe
-                  src={contactData.location.map}
+                  src={currentLanguage === 'en' ? (contactData.location.enMap || contactData.location.map) : contactData.location.map}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

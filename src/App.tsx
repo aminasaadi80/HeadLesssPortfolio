@@ -12,6 +12,9 @@ import { ThemeProvider } from './context/ThemeContext';
 import Loading from './Components/Loading';
 import { useEffect, useState } from 'react';
 import NotFound from './Components/NotFound';
+import './i18n/i18n';
+import Layout from './Components/Layout';
+import { LanguageProvider } from './context/LanguageContext';
 
 // Component to handle scroll to top on route change
 function ScrollToTop() {
@@ -45,24 +48,28 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider>
-        <Router>
-          <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col">
-            <ScrollToTop />
-            <RouteChangeHandler />
-            <Header />
-            <main className="flex-grow">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/projects/:slug" element={<SingleProject />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-        </Router>
+        <LanguageProvider>
+          <Router>
+            <Layout>
+              <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col">
+                <ScrollToTop />
+                <RouteChangeHandler />
+                <Header />
+                <main className="flex-grow">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/projects/:slug" element={<SingleProject />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
+            </Layout>
+          </Router>
+        </LanguageProvider>
       </ThemeProvider>
     </ApolloProvider>
   );

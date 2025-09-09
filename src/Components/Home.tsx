@@ -9,14 +9,22 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { stripHtml } from './StripHtml';
+import { useLanguage } from '../context/LanguageContext';
 
 interface HomeData {
   page: {
     homeFields: {
       hero: {
         title: string;
+        enTitle?: string;
         subtitle: string;
+        enSubtitle?: string;
         button: {
+          title: string;
+          url: string;
+          target: string;
+        };
+        enButton?: {
           title: string;
           url: string;
           target: string;
@@ -24,6 +32,7 @@ interface HomeData {
       };
       skills: {
         title: string;
+        enTitle?: string;
         items: Array<{
           img: {
             node: {
@@ -32,12 +41,19 @@ interface HomeData {
             };
           };
           title: string;
+          enTitle?: string;
           proficiency: number;
         }>;
       };
       projects: {
         title: string;
+        enTitle?: string;
         button: {
+          title: string;
+          url: string;
+          target: string;
+        };
+        enButton?: {
           title: string;
           url: string;
           target: string;
@@ -65,8 +81,15 @@ interface HomeData {
           };
         };
         title: string;
+        enTitle?: string;
         desc: string;
+        enDesc?: string;
         button: {
+          title: string;
+          url: string;
+          target: string;
+        };
+        enButton?: {
           title: string;
           url: string;
           target: string;
@@ -78,6 +101,7 @@ interface HomeData {
 
 function Home() {
   const { loading, error, data } = useQuery<HomeData>(GET_HOME_FIELDS);
+  const { currentLanguage } = useLanguage();
 
   const scrollToProjects = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -171,16 +195,18 @@ function Home() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-700 dark:to-purple-800">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
-            {homeFields.hero.title}
+            {currentLanguage === 'en' ? homeFields.hero.enTitle || homeFields.hero.title : homeFields.hero.title}
           </h1>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            {homeFields.hero.subtitle}
+            {currentLanguage === 'en' ? homeFields.hero.enSubtitle || homeFields.hero.subtitle : homeFields.hero.subtitle}
           </p>
           <button
             onClick={scrollToProjects}
             className="inline-block bg-white cursor-pointer text-indigo-600 dark:bg-gray-800 dark:text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
           >
-            {homeFields.hero.button.title}
+            {currentLanguage === 'en' 
+              ? homeFields.hero.enButton?.title || homeFields.hero.button.title 
+              : homeFields.hero.button.title}
           </button>
         </div>
       </section>
@@ -189,7 +215,7 @@ function Home() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
-            {homeFields.skills.title}
+            {currentLanguage === 'en' ? homeFields.skills.enTitle || homeFields.skills.title : homeFields.skills.title}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {homeFields.skills.items.map((skill) => (
@@ -206,7 +232,7 @@ function Home() {
                     />
                   )}
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {skill.title}
+                    {currentLanguage === 'en' ? skill.enTitle || skill.title : skill.title}
                   </h3>
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
@@ -228,7 +254,7 @@ function Home() {
       <section id="projects" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
-            {homeFields.projects.title}
+            {currentLanguage === 'en' ? homeFields.projects.enTitle || homeFields.projects.title : homeFields.projects.title}
           </h2>
           <Swiper className='swiper-projects'
             modules={[Navigation, Pagination, A11y]}
@@ -278,7 +304,9 @@ function Home() {
               to={homeFields.projects.button.url}
               className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200"
             >
-               {homeFields.projects.button.title}
+               {currentLanguage === 'en' 
+                 ? homeFields.projects.enButton?.title || homeFields.projects.button.title 
+                 : homeFields.projects.button.title}
             </Link>
           </div>
         </div>
@@ -299,17 +327,19 @@ function Home() {
             </div>
             <div className="w-full md:w-2/3">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-                {homeFields.about.title}
+                {currentLanguage === 'en' ? homeFields.about.enTitle || homeFields.about.title : homeFields.about.title}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                {stripHtml(homeFields.about.desc)}
+                {stripHtml(currentLanguage === 'en' ? homeFields.about.enDesc || homeFields.about.desc : homeFields.about.desc)}
               </p>
               <Link
                 to={homeFields.about.button.url}
                 target={homeFields.about.button.target}
                 className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200"
               >
-                {homeFields.about.button.title}
+                {currentLanguage === 'en' 
+                  ? homeFields.about.enButton?.title || homeFields.about.button.title 
+                  : homeFields.about.button.title}
               </Link>
             </div>
           </div>

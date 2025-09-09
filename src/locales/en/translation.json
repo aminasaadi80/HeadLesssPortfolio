@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Welcome to My Portfolio",
+    "subtitle": "Full Stack Developer & Designer",
+    "cta": "View My Work"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Explore my latest work",
+    "viewProject": "View Project",
+    "backToProjects": "Back to Projects",
+    "projectNotFound": "Project not found",
+    "loadingProject": "Loading project...",
+    "errorLoading": "Error loading projects"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Get to know me better",
+    "skills": "Skills",
+    "experience": "Experience",
+    "downloadCV": "Download CV"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Let's get in touch",
+    "info": {
+      "title": "Contact Information",
+      "subtitle": "Feel free to reach out",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address"
+    },
+    "social": {
+      "title": "Social Media"
+    },
+    "location": {
+      "title": "Location"
+    }
+  },
+  "footer": {
+    "copyright": "All rights reserved",
+    "menu": "Quick Links",
+    "social": "Follow Us"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "noData": "No data available"
+  }
+}

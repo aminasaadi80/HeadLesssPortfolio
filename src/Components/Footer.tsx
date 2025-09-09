@@ -4,23 +4,35 @@ import { useQuery } from '@apollo/client';
 import { GET_FOOTER, GET_MENUS } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";
 import { stripHtml } from './StripHtml';
+import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 
 interface FooterData {
   headerFooter: {
     footer: {
-      logo: {
+      logo_2?: {
         node: {
           sourceUrl: string;
           altText: string;
         };
       };
-      siteName: string;
-      desc: string;
-      menuTitle: string;
-      social: {
-        title: string;
-        items: Array<{
-          logo: {
+      light_logo_2?: {
+        node: {
+          sourceUrl: string;
+          altText: string;
+        };
+      };
+      siteName_2?: string;
+      enSiteName2?: string;
+      desc?: string;
+      enDesc?: string;
+      menuTitle?: string;
+      enMenuTitle?: string;
+      social?: {
+        title?: string;
+        enTitle?: string;
+        items?: Array<{
+          logo?: {
             node: {
               sourceUrl: string;
               altText: string;
@@ -31,9 +43,15 @@ interface FooterData {
             url: string;
             target: string;
           };
+          enLink?: {
+            title: string;
+            url: string;
+            target: string;
+          };
         }>;
       };
-      copyrightText: string;
+      copyrightText?: string;
+      enCopyrightText?: string;
     };
   };
 }
@@ -41,6 +59,8 @@ interface FooterData {
 interface MenuData {
   menus: {
     nodes: Array<{
+      id: string;
+      name: string;
       menuItems: {
         nodes: Array<{
           label: string;
@@ -53,6 +73,8 @@ interface MenuData {
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const { isDarkMode } = useTheme();
+  const { currentLanguage } = useLanguage();
   const { loading: footerLoading, error: footerError, data: footerData } = useQuery<FooterData>(GET_FOOTER);
   const { loading: menuLoading, error: menuError, data: menuData } = useQuery<MenuData>(GET_MENUS);
 
@@ -61,7 +83,7 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="space-y-4">
-            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-8 w-12" />
             <Skeleton className="h-4 w-48" />
           </div>
           <div>
@@ -94,9 +116,30 @@ const Footer: React.FC = () => {
   );
 
   const footer = footerData?.headerFooter?.footer;
-  const logo = footer?.logo?.node;
+  const darkLogo = footer?.logo_2?.node;
+  const lightLogo = footer?.light_logo_2?.node;
+  const logo = isDarkMode ? darkLogo : lightLogo || darkLogo;
   const socialItems = footer?.social?.items || [];
-  const menuItems = menuData?.menus?.nodes?.[0]?.menuItems?.nodes || [];
+  
+  // Select menu based on language
+  const menus = menuData?.menus?.nodes || [];
+  const footerMenu = currentLanguage === 'en' 
+    ? menus.find(menu => menu.name === 'EN Footer')
+    : menus.find(menu => menu.name === 'Footer');
+  const rawMenuItems = footerMenu?.menuItems?.nodes || [];
+  
+  // Process menu items to handle URLs
+  const menuItems = rawMenuItems.map(item => {
+    let url = item.url;
+    if (url.includes('aminasaadi.ir')) {
+      url = url.replace('https://aminasaadi.ir', '');
+      if (url === '') url = '/';
+    }
+    return {
+      ...item,
+      url
+    };
+  });
 
   return (
     <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
@@ -107,30 +150,34 @@ const Footer: React.FC = () => {
             <Link to="/" className="flex items-center">
               {logo ? (
                 <img
-                  className="h-8 w-auto"
+                  className="h-8 w-auto object-contain"
                   src={logo.sourceUrl}
                   alt={logo.altText || 'Logo'}
                 />
               ) : (
                 <img
-                  className="h-8 w-auto"
+                  className="h-8 w-auto object-contain"
                   src="/vite.svg"
                   alt="Logo"
                 />
               )}
-              <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">
-                {footer?.siteName || 'HeadLess Portfolio'}
-              </span>
+              {/*<span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">*/}
+              {/*  {footer?.siteName_2 || 'HeadLess Portfolio'}*/}
+              {/*</span>*/}
             </Link>
             <p className="text-gray-600 dark:text-gray-400">
-              {stripHtml(footer?.desc || 'Creating amazing digital experiences with modern web technologies.')}
+              {stripHtml(currentLanguage === 'en' 
+                ? footer?.enDesc || footer?.desc || 'Creating amazing digital experiences with modern web technologies.'
+                : footer?.desc || 'Creating amazing digital experiences with modern web technologies.')}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              {footer?.menuTitle || 'Quick Links'}
+              {currentLanguage === 'en' 
+                ? footer?.enMenuTitle || footer?.menuTitle || 'Quick Links'
+                : footer?.menuTitle || 'دسترسی سریع'}
             </h3>
             <ul className="space-y-2">
               {menuItems.map((item, index) => (
@@ -149,7 +196,9 @@ const Footer: React.FC = () => {
           {/* Social Links */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              {footer?.social?.title || 'Connect With Me'}
+              {currentLanguage === 'en' 
+                ? footer?.social?.enTitle || footer?.social?.title || 'Connect With Me'
+                : footer?.social?.title || 'ارتباط با من'}
             </h3>
             {/* <div className="flex space-x-4">
               {socialItems.map((item, index) => (
@@ -231,7 +280,9 @@ const Footer: React.FC = () => {
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
           <p className="text-center text-gray-600 dark:text-gray-400">
-            {footer?.copyrightText || `© ${currentYear} HeadLess Portfolio. All rights reserved.`}
+            {currentLanguage === 'en' 
+              ? footer?.enCopyrightText || footer?.copyrightText || `© ${currentYear} HeadLess Portfolio. All rights reserved.`
+              : footer?.copyrightText || `© ${currentYear} پورتفولیو HeadLess. تمامی حقوق محفوظ است.`}
           </p>
         </div>
       </div>

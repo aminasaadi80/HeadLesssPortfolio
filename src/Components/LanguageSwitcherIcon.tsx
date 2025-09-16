@@ -60,14 +60,14 @@ const LanguageSwitcherIcon: React.FC = () => {
         </svg>
         
         {/* Current Language Badge */}
-        <span className="absolute -top-1 -right-1 flex items-center justify-center w-6 h-6 bg-indigo-600 text-white text-xs font-bold rounded-full z-10 uppercase">
+        <span className="absolute -top-1 -end-1 flex items-center justify-center w-6 h-6 bg-indigo-600 text-white text-xs font-bold rounded-full z-10 uppercase">
           {currentLanguage?.code === 'fa' ? 'FA' : 'EN'}
         </span>
       </button>
 
       {/* Language Options Dropdown */}
       <div
-        className={`absolute top-full mt-2 right-0 rtl:right-auto rtl:left-0 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200 ${
+        className={`absolute top-full mt-2 end-0 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200 ${
           isOpen 
             ? 'opacity-100 scale-100 visible z-50' 
             : 'opacity-0 scale-95 invisible z-0'
@@ -86,7 +86,7 @@ const LanguageSwitcherIcon: React.FC = () => {
             <span className="flex items-center">
               <span className="font-medium">{lang.name}</span>
             </span>
-            <span className={`ml-3 rtl:mr-3 rtl:ml-0 text-xs font-bold uppercase px-1.5 py-0.5 rounded ${
+            <span className={`ms-3 text-xs font-bold uppercase px-1.5 py-0.5 rounded ${
               i18n.language === lang.code
                 ? 'bg-indigo-600 text-white'
                 : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300'

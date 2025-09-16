@@ -307,6 +307,7 @@ export const GET_POST_BY_SLUG = gql`
       excerpt
       slug
       featuredImage { node { sourceUrl } }
+      project { siteUrl }
       categories { nodes { name slug } }
     }
   }

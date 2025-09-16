@@ -13,6 +13,9 @@ export interface Post {
       sourceUrl: string;
     };
   };
+  project?: {
+    siteUrl: string;
+  };
   categories?: {
     nodes: Array<{
       name: string;

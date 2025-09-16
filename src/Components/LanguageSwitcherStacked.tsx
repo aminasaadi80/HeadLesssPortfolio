@@ -31,7 +31,7 @@ const LanguageSwitcherStacked: React.FC = () => {
       aria-label="Toggle language"
     >
       {/* Globe Icon with animation */}
-      <div className="absolute left-1 rtl:right-1 rtl:left-auto">
+      <div className="absolute start-1">
         <svg
           className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300"
           fill="none"
@@ -49,7 +49,7 @@ const LanguageSwitcherStacked: React.FC = () => {
       </div>
 
       {/* Stacked Language Labels with Z-index effect */}
-      <div className="absolute right-1.5 rtl:left-1.5 rtl:right-auto flex items-center">
+      <div className="absolute end-1.5 flex items-center">
         {/* FA Label */}
         <span 
           className={`absolute transition-all duration-300 text-xs font-bold px-1.5 py-0.5 rounded ${

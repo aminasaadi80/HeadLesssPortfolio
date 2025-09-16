@@ -37,7 +37,7 @@ function NotFound() {
         <p className="text-gray-600 dark:text-gray-400 mt-2 max-w-md mx-auto">
           {t.description}
         </p>
-        <div className="mt-6 space-x-4 rtl:space-x-reverse">
+        <div className="mt-6 space-x-4">
           <Link
             to="/"
             className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200"

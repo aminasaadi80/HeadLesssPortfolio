@@ -39,7 +39,7 @@ const LanguageSwitcherFlip: React.FC = () => {
       className="relative group"
       aria-label="Toggle language"
     >
-      <div className="relative flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:from-indigo-50 hover:to-indigo-100 dark:hover:from-indigo-900/20 dark:hover:to-indigo-800/20 transition-all duration-300 shadow-sm hover:shadow-md">
+      <div className="relative flex items-center space-x-2 px-3 py-2 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:from-indigo-50 hover:to-indigo-100 dark:hover:from-indigo-900/20 dark:hover:to-indigo-800/20 transition-all duration-300 shadow-sm hover:shadow-md">
         
         {/* Globe Icon with pulse animation on hover */}
         <div className="relative">
@@ -80,7 +80,7 @@ const LanguageSwitcherFlip: React.FC = () => {
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute -top-1 -right-1 rtl:-left-1 rtl:right-auto">
+        <div className="absolute -top-1 -end-1">
           <span className={`flex h-2 w-2 ${isFarsi ? 'animate-pulse' : ''}`}>
             <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
               isFarsi ? 'bg-indigo-400' : 'bg-gray-400'
@@ -93,9 +93,9 @@ const LanguageSwitcherFlip: React.FC = () => {
       </div>
 
       {/* Tooltip */}
-      <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+      <div className="absolute bottom-full mb-2 start-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
         {isFarsi ? 'Switch to English' : 'تغییر به فارسی'}
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-gray-900 dark:border-t-gray-700"></div>
+        <div className="absolute top-full start-1/2 transform -translate-x-1/2 -translate-y-1 w-0 h-0 border-s-4 border-s-transparent border-e-4 border-e-transparent border-t-4 border-t-gray-900 dark:border-t-gray-700"></div>
       </div>
     </button>
   );

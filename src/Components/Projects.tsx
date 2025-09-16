@@ -29,6 +29,9 @@ interface Project {
       altText: string;
     };
   };
+  project?: {
+    siteUrl: string;
+  };
   categories?: {
     nodes?: Array<{
       name: string;
@@ -133,7 +136,7 @@ function Projects() {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-4">
+                <div className="absolute bottom-0 start-0 p-4">
                   <h3 className="text-xl font-bold text-white">{project.title}</h3>
                 </div>
               </div>
@@ -148,25 +151,51 @@ function Projects() {
                     ))}
                   </div>
                 )}
-                <Link
-                  to={`/projects/${project.slug}`}
-                  className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
-                >
-                  {currentLanguage === 'en' ? 'View Project' : 'مشاهده پروژه'}
-                  <svg
-                    className="w-4 h-4 ml-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                <div className="flex items-center justify-between">
+                  <Link
+                    to={`/projects/${project.slug}`}
+                    className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                </Link>
+                    {currentLanguage === 'en' ? 'View Details' : 'جزئیات'}
+                    <svg
+                      className="w-4 h-4 ms-2 rtl:rotate-180"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </Link>
+                  
+                  {project.project?.siteUrl && (
+                    <a
+                      href={project.project.siteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-colors"
+                      title={currentLanguage === 'en' ? 'Visit Live Site' : 'مشاهده سایت زنده'}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
+                      </svg>
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           ))}

@@ -253,6 +253,7 @@ function Home() {
             ))}
           </div>
         </div>
+
       </section>
 
       {/* Projects Section */}

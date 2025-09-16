@@ -312,7 +312,7 @@ function Home() {
                     
                     <div className="flex items-center justify-between">
                       <Link
-                        to={`/projects/${project.slug}`}
+                        to={`/projects/${project.slug.replace('en-', '')}`}
                         className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium inline-flex items-center"
                       >
                         {currentLanguage === 'en' ? 'View Details' : 'جزئیات'}

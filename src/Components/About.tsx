@@ -210,7 +210,7 @@ function About() {
                         ></div>
                       </div>
                       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                        {skill.proficiency}% proficiency
+                        {skill.proficiency}{currentLanguage === 'en' ? '% proficiency' : '٪ مهارت'}
                       </p>
                     </div>
                   );

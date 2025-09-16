@@ -198,7 +198,7 @@ function Contact() {
                       : contactData.social.title}
                 </h4>
 
-                <div className="flex space-x-4">
+                <div className="flex md:space-x-3 space-x-2">
                   <a
                       href="https://github.com/aminasaadi80"
                       target="_blank"

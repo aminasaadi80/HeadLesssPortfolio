@@ -140,7 +140,7 @@ function ProjectsMultilingual() {
                   )}
                   <div className="flex items-center justify-between">
                     <Link
-                      to={`/projects/${project.slug}`}
+                      to={`/projects/${project.slug.replace('en-', '')}`}
                       className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
                     >
                       {t('projects.viewProject')}
@@ -165,7 +165,7 @@ function ProjectsMultilingual() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-colors"
-                        title={currentLanguage === 'en' ? 'Visit Live Site' : 'مشاهده سایت زنده'}
+                        title={i18n.language === 'en' ? 'Visit Live Site' : 'مشاهده سایت زنده'}
                       >
                         <svg
                           className="w-5 h-5"

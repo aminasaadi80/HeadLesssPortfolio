@@ -11,8 +11,14 @@ import {useLanguage} from "../context/LanguageContext.tsx";
 function SingleProject() {
   const { currentLanguage } = useLanguage();
   const { slug } = useParams();
+
+  // Always use base slug from URL, adjust for query based on language
+  // URL will always have base slug (without en- prefix)
+  // Add en- prefix only when fetching English version
+  const adjustedSlug = currentLanguage === 'en' ? `en-${slug}` : slug;
+
   const { loading, error, data } = useQuery(GET_POST_BY_SLUG, {
-    variables: { slug },
+    variables: { slug: adjustedSlug },
   });
 
   if (loading) return (

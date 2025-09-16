@@ -153,7 +153,7 @@ function Projects() {
                 )}
                 <div className="flex items-center justify-between">
                   <Link
-                    to={`/projects/${project.slug}`}
+                    to={`/projects/${project.slug.replace('en-', '')}`}
                     className="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
                   >
                     {currentLanguage === 'en' ? 'View Details' : 'جزئیات'}

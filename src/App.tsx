@@ -12,7 +12,6 @@ import { ThemeProvider } from './context/ThemeContext';
 import Loading from './Components/Loading';
 import { useEffect, useState } from 'react';
 import NotFound from './Components/NotFound';
-import './i18n/i18n';
 import Layout from './Components/Layout';
 import { LanguageProvider } from './context/LanguageContext';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_FOOTER, GET_MENUS } from '../graphql/queries';
@@ -119,7 +119,6 @@ const Footer: React.FC = () => {
   const darkLogo = footer?.logo_2?.node;
   const lightLogo = footer?.light_logo_2?.node;
   const logo = isDarkMode ? darkLogo : lightLogo || darkLogo;
-  const socialItems = footer?.social?.items || [];
   
   // Select menu based on language
   const menus = menuData?.menus?.nodes || [];

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_ABOUT_FIELDS } from '../graphql/queries';
@@ -254,7 +253,7 @@ function About() {
           <div className="mt-16 text-center">
             <Link
               to={aboutData.button.url}
-              target={aboutData.button.currentLanguagetarget}
+              target={aboutData.button.target}
               className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200"
             >
               {currentLanguage === 'en' ? (aboutData.enButton?.title || aboutData.button.title) : aboutData.button.title}

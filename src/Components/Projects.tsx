@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_PROJECTS_FIELDS, GET_POSTS, GET_POSTS_FA, GET_POSTS_EN } from '../graphql/queries';
+import { GET_PROJECTS_FIELDS, GET_POSTS_FA, GET_POSTS_EN } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";
 import { stripHtml } from './StripHtml';
 import TechBadge from './ui/TechBadge';

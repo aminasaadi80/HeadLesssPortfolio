@@ -1,4 +1,3 @@
-import React from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_CONTACT_FIELDS } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";

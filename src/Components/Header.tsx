@@ -4,7 +4,6 @@ import { GET_HEADER, GET_MENUS } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
-import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSwitcherGlobe from './LanguageSwitcherGlobe';
 
@@ -51,7 +50,6 @@ interface HeaderData {
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isDarkMode, toggleDarkMode } = useTheme();
-  const { t } = useTranslation();
   const { currentLanguage } = useLanguage();
   
   const { loading: menuLoading, error: menuError, data: menuData } = useQuery<MenuData>(GET_MENUS);
@@ -106,9 +104,6 @@ function Header() {
   const darkLogo = headerData?.headerFooter?.header?.logo?.node;
   const lightLogo = headerData?.headerFooter?.header?.light_logo?.node;
   const headerLogo = isDarkMode ? darkLogo : lightLogo || darkLogo;
-  const siteName = currentLanguage === 'en' 
-    ? headerData?.headerFooter?.header?.enSiteName || headerData?.headerFooter?.header?.siteName || 'Portfolio'
-    : headerData?.headerFooter?.header?.siteName || 'Portfolio';
 
   // Process menu items to handle internal/external links
   const processedMenuItems = menuItems.map((item: MenuItem) => {

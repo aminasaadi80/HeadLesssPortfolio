@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { Navigation, Pagination, A11y } from 'swiper/modules';
 import { useQuery } from '@apollo/client';
 import { GET_HOME_FIELDS } from '../graphql/queries';
 import { useMultilingualPosts } from '../hooks/useMultilingualPosts';
@@ -96,7 +96,7 @@ function Home() {
     loading: postsLoading, 
     error: postsError, 
     posts, 
-    getPostsByLanguage 
+ 
   } = useMultilingualPosts();
 
   // Select posts based on current language only (no fallback)
@@ -293,7 +293,7 @@ function Home() {
                       {project.title}
                     </h3>
                     <div className="text-gray-600 h-[50px] max-h-[50px] line-clamp-2 dark:text-gray-400 mb-4">
-                      {stripHtml(project.excerpt)}
+                      {stripHtml(project.excerpt || '')}
                     </div>
                     
                     {/* Show categories if available */}

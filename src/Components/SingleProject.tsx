@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_POST_BY_SLUG } from '../graphql/queries';
@@ -104,7 +104,7 @@ function SingleProject() {
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
               {project.categories?.nodes && project.categories.nodes.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {project.categories.nodes.map((category) => (
+                  {project.categories.nodes.map((category: any) => (
                     <TechBadge key={category.slug} name={category.name} />
                   ))}
                 </div>

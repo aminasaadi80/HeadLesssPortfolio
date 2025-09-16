@@ -126,3 +126,38 @@ html {
 .swiper-projects .swiper-wrapper {
   @apply mb-10
 }
+
+/* RTL support for Swiper navigation */
+.rtl .swiper-button-next {
+  left: 10px;
+  right: auto;
+}
+
+.rtl .swiper-button-prev {
+  right: 10px;
+  left: auto;
+}
+
+.rtl .swiper-button-next:after {
+  content: 'prev';
+}
+
+.rtl .swiper-button-prev:after {
+  content: 'next';
+}
+
+/* Fix Swiper pagination for RTL */
+.rtl .swiper-pagination {
+  direction: rtl;
+}
+
+/* Mobile touch handling for RTL */
+@media (max-width: 768px) {
+  .rtl .swiper-container {
+    direction: rtl;
+  }
+
+  .rtl .swiper-slide {
+    direction: rtl;
+  }
+}

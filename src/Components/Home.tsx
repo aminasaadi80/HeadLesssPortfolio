@@ -89,7 +89,7 @@ interface HomeData {
 
 function Home() {
   const { loading: homeLoading, error: homeError, data } = useQuery<HomeData>(GET_HOME_FIELDS);
-  const { currentLanguage } = useLanguage();
+  const { currentLanguage, isRtl } = useLanguage();
   
   // Get multilingual posts
   const { 
@@ -263,6 +263,8 @@ function Home() {
             {currentLanguage === 'en' ? homeFields.projects.enTitle || homeFields.projects.title : homeFields.projects.title}
           </h2>
           <Swiper className='swiper-projects'
+            key={`swiper-${currentLanguage}`}
+            dir={isRtl ? 'rtl' : 'ltr'}
             modules={[Navigation, Pagination, A11y]}
             spaceBetween={30}
             slidesPerView={1}

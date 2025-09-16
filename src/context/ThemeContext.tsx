@@ -22,6 +22,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Update localStorage and document class when theme changes
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     document.documentElement.classList.toggle('dark', isDarkMode);
+
+    // Update favicon based on theme
+    const favicon = document.querySelector("link[rel='icon']") as HTMLLinkElement;
+    if (favicon) {
+      favicon.href = isDarkMode ? '/dark-favicon.png' : '/light-favicon.png';
+    }
   }, [isDarkMode]);
 
   const toggleDarkMode = () => {

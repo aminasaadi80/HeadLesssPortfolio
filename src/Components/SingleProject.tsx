@@ -5,9 +5,11 @@ import { GET_POST_BY_SLUG } from '../graphql/queries';
 import { Skeleton } from "../Components/ui/skeleton";
 import { stripHtml } from './StripHtml';
 import TechBadge from './ui/TechBadge';
+import {useLanguage} from "../context/LanguageContext.tsx";
 
 
 function SingleProject() {
+  const { currentLanguage } = useLanguage();
   const { slug } = useParams();
   const { loading, error, data } = useQuery(GET_POST_BY_SLUG, {
     variables: { slug },
@@ -51,7 +53,8 @@ function SingleProject() {
           to="/projects"
           className="inline-block mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
         >
-          Back to Projects
+          {currentLanguage === 'en' ? 'Back to Projects' : 'برگشتن به پروژه‌ها'}
+
         </Link>
       </div>
     </div>
@@ -77,7 +80,7 @@ function SingleProject() {
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
           </svg>
-          Back to Projects
+          {currentLanguage === 'en' ? 'Back to Projects' : 'برگشتن به پروژه‌ها'}
         </Link>
 
         <article className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">

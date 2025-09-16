@@ -196,7 +196,7 @@ function About() {
                           <img
                             src={skill.img.node.sourceUrl}
                             alt={skill.img.node.altText || skillTitle}
-                            className="w-8 h-8 mr-3"
+                            className="w-8 h-8 me-3"
                           />
                         )}
                         <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -254,7 +254,7 @@ function About() {
           <div className="mt-16 text-center">
             <Link
               to={aboutData.button.url}
-              target={aboutData.button.target}
+              target={aboutData.button.currentLanguagetarget}
               className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200"
             >
               {currentLanguage === 'en' ? (aboutData.enButton?.title || aboutData.button.title) : aboutData.button.title}

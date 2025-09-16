@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { useQuery } from '@apollo/client';
 import { GET_HOME_FIELDS } from '../graphql/queries';
+import { useMultilingualPosts } from '../hooks/useMultilingualPosts';
 import { Skeleton } from "../Components/ui/skeleton";
+import TechBadge from './ui/TechBadge';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -58,20 +60,6 @@ interface HomeData {
           url: string;
           target: string;
         };
-        posts: {
-          nodes: Array<{
-            id: string;
-            title: string;
-            excerpt: string;
-            slug: string;
-            featuredImage: {
-              node: {
-                sourceUrl: string;
-                altText: string;
-              };
-            };
-          }>;
-        };
       };
       about: {
         img: {
@@ -100,8 +88,25 @@ interface HomeData {
 }
 
 function Home() {
-  const { loading, error, data } = useQuery<HomeData>(GET_HOME_FIELDS);
+  const { loading: homeLoading, error: homeError, data } = useQuery<HomeData>(GET_HOME_FIELDS);
   const { currentLanguage } = useLanguage();
+  
+  // Get multilingual posts
+  const { 
+    loading: postsLoading, 
+    error: postsError, 
+    posts, 
+    getPostsByLanguage 
+  } = useMultilingualPosts();
+
+  // Select posts based on current language only (no fallback)
+  const displayPosts = useMemo(() => {
+    const currentLangPosts = currentLanguage === 'en' ? posts.en : posts.fa;
+    return currentLangPosts.slice(0, 6); // Show only current language posts, limit to 6
+  }, [posts, currentLanguage]);
+
+  const loading = homeLoading || postsLoading;
+  const error = homeError || postsError;
 
   const scrollToProjects = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -228,7 +233,7 @@ function Home() {
                     <img
                       src={skill.img.node.sourceUrl}
                       alt={skill.img.node.altText || skill.title}
-                      className="w-8 h-8 mr-3"
+                      className="w-8 h-8 me-3"
                     />
                   )}
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -242,7 +247,7 @@ function Home() {
                   ></div>
                 </div>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                  {skill.proficiency}% proficiency
+                  {skill.proficiency}{currentLanguage === 'en' ? '% proficiency' : '٪ مهارت'}
                 </p>
               </div>
             ))}
@@ -273,14 +278,16 @@ function Home() {
               },
             }}
           >
-            {homeFields.projects.posts.nodes.map((project) => (
+            {displayPosts.map((project) => (
               <SwiperSlide key={project.id}>
                 <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
-                  <img
-                    src={project.featuredImage?.node?.sourceUrl || 'https://placehold.co/600x400'}
-                    alt={project.featuredImage?.node?.altText || project.title}
-                    className="w-full h-48 object-cover"
-                  />
+                  <div className="relative">
+                    <img
+                      src={project.featuredImage?.node?.sourceUrl || 'https://placehold.co/600x400'}
+                      alt={project.title}
+                      className="w-full h-48 object-cover"
+                    />
+                  </div>
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                       {project.title}
@@ -288,11 +295,39 @@ function Home() {
                     <div className="text-gray-600 h-[50px] max-h-[50px] line-clamp-2 dark:text-gray-400 mb-4">
                       {stripHtml(project.excerpt)}
                     </div>
+                    
+                    {/* Show categories if available */}
+                    {project.categories?.nodes && project.categories.nodes.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {project.categories.nodes.slice(0, 3).map((category) => (
+                          <TechBadge key={category.slug} name={category.name} />
+                        ))}
+                        {project.categories.nodes.length > 3 && (
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            +{project.categories.nodes.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    
                     <Link
                       to={`/projects/${project.slug}`}
-                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
+                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium inline-flex items-center"
                     >
-                      View Project →
+                      {currentLanguage === 'en' ? 'View Project' : 'مشاهده پروژه'}
+                      <svg
+                        className="w-4 h-4 ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        />
+                      </svg>
                     </Link>
                   </div>
                 </div>

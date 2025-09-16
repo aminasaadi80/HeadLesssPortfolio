@@ -1,47 +1,21 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_MULTILINGUAL_PROJECTS_FIELDS, GET_MULTILINGUAL_POSTS } from '../graphql/multilingualQueries';
+import { GET_PROJECTS_FIELDS } from '../graphql/queries';
+import { useMultilingualPosts } from '../hooks/useMultilingualPosts';
 import { Skeleton } from "../Components/ui/skeleton";
 import { stripHtml } from './StripHtml';
 import TechBadge from './ui/TechBadge';
 import { useTranslation } from 'react-i18next';
 import { useLocalizedField } from '../utils/multilingualHelpers';
 
-interface MultilingualContent {
-  titleEn?: string;
-  titleFa?: string;
-  excerptEn?: string;
-  excerptFa?: string;
-  contentEn?: string;
-  contentFa?: string;
-}
-
-interface Project {
-  id: string;
-  slug: string;
-  featuredImage?: {
-    node?: {
-      sourceUrl: string;
-      altText: string;
-    };
-  };
-  categories?: {
-    nodes?: Array<{
-      name: string;
-      slug: string;
-    }>;
-  };
-  multilingualContent?: MultilingualContent;
-}
-
 interface ProjectsData {
   page: {
     projects: {
-      titleEn?: string;
-      titleFa?: string;
-      subtitleEn?: string;
-      subtitleFa?: string;
+      title?: string;
+      enTitle?: string;
+      subtitle?: string;
+      enSubtitle?: string;
     };
   };
 }
@@ -53,16 +27,22 @@ function ProjectsMultilingual() {
   const { t, i18n } = useTranslation();
   const getLocalized = useLocalizedField();
   
-  const { loading: loadingProjects, error: projectsError, data: projectsData } = useQuery<ProjectsData>(GET_MULTILINGUAL_PROJECTS_FIELDS);
-  const { loading: loadingPosts, error: postsError, data: postsData } = useQuery(GET_MULTILINGUAL_POSTS);
+  const { loading: loadingProjects, error: projectsError, data: projectsData } = useQuery<ProjectsData>(GET_PROJECTS_FIELDS);
+  const { 
+    loading: loadingPosts, 
+    error: postsError, 
+    posts, 
+    getPostsByLanguage 
+  } = useMultilingualPosts();
 
   const loading = loadingProjects || loadingPosts;
   const error = projectsError || postsError;
 
-  const projects = postsData?.posts?.nodes || [];
-  const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
+  // Get all posts from both languages
+  const allPosts = [...posts.en, ...posts.fa];
+  const totalPages = Math.ceil(allPosts.length / ITEMS_PER_PAGE);
 
-  const currentProjects = projects.slice(
+  const currentProjects = allPosts.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -130,10 +110,7 @@ function ProjectsMultilingual() {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {currentProjects.map((project: Project) => {
-            const title = getLocalized(project.multilingualContent, 'title');
-            const excerpt = getLocalized(project.multilingualContent, 'excerpt');
-            
+          {currentProjects.map((project) => {
             return (
               <div
                 key={project.id}
@@ -142,17 +119,17 @@ function ProjectsMultilingual() {
                 <div className="relative h-48">
                   <img
                     src={project.featuredImage?.node?.sourceUrl || 'https://placehold.co/600x400'}
-                    alt={project.featuredImage?.node?.altText || title}
+                    alt={project.title}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 p-4">
-                    <h3 className="text-xl font-bold text-white">{title}</h3>
+                    <h3 className="text-xl font-bold text-white">{project.title}</h3>
                   </div>
                 </div>
                 <div className="p-6">
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    {stripHtml(excerpt)}
+                    {stripHtml(project.excerpt)}
                   </p>
                   {project.categories?.nodes && project.categories.nodes.length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-4">

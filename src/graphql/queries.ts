@@ -13,6 +13,39 @@ export const GET_POSTS = gql`
         date
         excerpt
         featuredImage { node { sourceUrl } }
+        project { siteUrl }
+        categories { nodes { name slug } }
+      }
+    }
+  }
+`;
+
+/* Dynamic multilingual posts query with slug prefix filtering */
+export const GET_MULTILINGUAL_POSTS = gql`
+  query GetMultilingualPosts {
+    EnPost: posts(first: 20, where: { slugPrefix: "en-", orderby: { field: DATE, order: DESC } }) {
+      nodes {
+        id
+        title
+        slug
+        content
+        date
+        excerpt
+        featuredImage { node { sourceUrl } }
+        project { siteUrl }
+        categories { nodes { name slug } }
+      }
+    }
+    FaPost: posts(first: 20, where: { notSlugPrefix: "en-", orderby: { field: DATE, order: DESC } }) {
+      nodes {
+        id
+        title
+        slug
+        content
+        date
+        excerpt
+        featuredImage { node { sourceUrl } }
+        project { siteUrl }
         categories { nodes { name slug } }
       }
     }
@@ -22,7 +55,7 @@ export const GET_POSTS = gql`
 /* نسخه‌های مجزا بر اساس زبان (ایمن با languageSlug) */
 export const GET_POSTS_FA = gql`
   query GetFaPosts {
-    posts(where: { languageSlug: "fa" }) {
+    posts(first: 20, where: { notSlugPrefix: "en-", orderby: { field: DATE, order: DESC } }) {
       nodes {
         id
         title
@@ -31,6 +64,7 @@ export const GET_POSTS_FA = gql`
         date
         excerpt
         featuredImage { node { sourceUrl } }
+        project { siteUrl }
         categories { nodes { name slug } }
       }
     }
@@ -39,7 +73,7 @@ export const GET_POSTS_FA = gql`
 
 export const GET_POSTS_EN = gql`
   query GetEnPosts {
-    posts(where: { languageSlug: "en" }) {
+    posts(first: 20, where: { slugPrefix: "en-", orderby: { field: DATE, order: DESC } }) {
       nodes {
         id
         title
@@ -48,6 +82,7 @@ export const GET_POSTS_EN = gql`
         date
         excerpt
         featuredImage { node { sourceUrl } }
+        project { siteUrl }
         categories { nodes { name slug } }
       }
     }
@@ -147,17 +182,6 @@ export const GET_HOME_FIELDS = gql`
           enTitle
           button { title url target }
           enButton { title url target }
-          posts {
-            nodes {
-              ... on Post {
-                id
-                title
-                excerpt
-                slug
-                featuredImage { node { sourceUrl altText } }
-              }
-            }
-          }
         }
         about {
           img { node { sourceUrl altText } }

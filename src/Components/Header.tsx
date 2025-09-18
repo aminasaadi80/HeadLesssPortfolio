@@ -85,7 +85,7 @@ function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-2">
-            <img src="/vite.svg" alt="Logo" className="h-8 w-auto object-contain" />
+            <img src="/vite.svg" alt="Logo" className="md:h-8 h-6 w-auto object-contain" />
             {/*<span className="text-xl font-bold text-gray-900 dark:text-white">Portfolio</span>*/}
           </div>
           <p className="text-red-500">Error loading menu data</p>
@@ -130,10 +130,10 @@ function Header() {
                 <img 
                   src={headerLogo.sourceUrl} 
                   alt={headerLogo.altText || 'Logo'} 
-                  className="h-8 w-auto object-contain" 
+                  className="md:h-8 h-6 w-auto object-contain" 
                 />
               ) : (
-                <img src="/vite.svg" alt="Logo" className="h-8 w-auto object-contain" />
+                <img src="/vite.svg" alt="Logo" className="md:h-8 h-6 w-auto object-contain" />
               )}
               {/*<span className="text-xl font-bold text-gray-900 dark:text-white">*/}
               {/*  {siteName}*/}

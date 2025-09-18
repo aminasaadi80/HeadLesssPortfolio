@@ -149,13 +149,13 @@ const Footer: React.FC = () => {
             <Link to="/" className="flex items-center">
               {logo ? (
                 <img
-                  className="h-8 w-auto object-contain"
+                  className="md:h-8 h-6 w-auto object-contain"
                   src={logo.sourceUrl}
                   alt={logo.altText || 'Logo'}
                 />
               ) : (
                 <img
-                  className="h-8 w-auto object-contain"
+                  className="md:h-8 h-6 w-auto object-contain"
                   src="/vite.svg"
                   alt="Logo"
                 />
